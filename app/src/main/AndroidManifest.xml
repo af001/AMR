@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="technology.xor.amr">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/camping"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".MapViews.MapView"
+            android:parentActivityName=".MainActivity" />
+
+        <activity android:name=".DetailViews.DetailsActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="713c97ad73c92e691d5188791591507b1fe02b49" />
+    </application>
+
+</manifest>

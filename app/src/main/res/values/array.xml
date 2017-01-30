@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_interval_entry">
+        <item>Integrity</item>
+        <item>Loyalty</item>
+        <item>Honor</item>
+        <item>Courage</item>
+    </string-array>
+    <string-array name="pref_site_entry">
+        <item>RV1</item>
+        <item>RV2</item>
+        <item>RV3</item>
+        <item>RV4</item>
+        <item>RV5</item>
+        <item>RV6</item>
+    </string-array>
+</resources>

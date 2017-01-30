@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="AMR Settings">
+        <ListPreference
+            android:key="team_name"
+            android:title="Team Name"
+            android:summary="Set your team name for reporting your location"
+            android:dialogTitle="Select your team from the list:"
+            android:entries="@array/pref_interval_entry"
+            android:entryValues="@array/pref_interval_entry"
+            android:defaultValue="Integrity" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Urban Trek Settings">
+        <ListPreference
+            android:key="site_name"
+            android:title="Site Name"
+            android:summary="Set your site name for reporting candidate locations"
+            android:dialogTitle="Select your site from the list:"
+            android:entries="@array/pref_site_entry"
+            android:entryValues="@array/pref_site_entry"
+            android:defaultValue="RV1" />
+    </PreferenceCategory>
+</PreferenceScreen>

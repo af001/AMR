@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/grp1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_integrity"
+            android:icon="@drawable/ic_robot_monster_of_one_eye"
+            android:title="Integrity"/>
+        <item
+            android:id="@+id/nav_honor"
+            android:icon="@drawable/ic_robot_of_circular_parts"
+            android:title="Honor" />
+        <item
+            android:id="@+id/nav_loyalty"
+            android:icon="@drawable/ic_robot_with_flexible_arms_and_legs"
+            android:title="Loyalty" />
+        <item
+            android:id="@+id/nav_courage"
+            android:icon="@drawable/ic_rounded_robot_design_with_spirals_arms"
+            android:title="Courage" />
+    </group>
+
+    <group android:id="@+id/grp2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_map"
+            android:icon="@drawable/ic_marker"
+            android:title="Site Map" />
+    </group>
+
+    <group android:id="@+id/grp3"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_trek"
+            android:icon="@drawable/ic_directions_walk_black_24px"
+            android:title="Urban Trek" />
+    </group>
+
+</menu>
