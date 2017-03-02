@@ -1,5 +1,8 @@
 package technology.xor.amr.trek;
 
+/**
+ *Trek Object
+ */
 public class Trek {
     String candidate;
 

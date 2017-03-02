@@ -29,6 +29,9 @@ import java.util.List;
 
 import technology.xor.amr.DetailViews.DetailsActivity;
 
+/**
+ * SiteAdapter - Load the sites into the recyclerview
+ */
 public class SiteAdapter extends RecyclerView.Adapter<SiteAdapter.SiteViewHolder>{
 
     private List<Site> sites;

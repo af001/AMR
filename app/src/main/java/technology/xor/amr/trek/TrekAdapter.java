@@ -3,13 +3,11 @@ package technology.xor.amr.trek;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.MultiSelectListPreference;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +27,9 @@ import java.util.List;
 
 import technology.xor.amr.R;
 
+/**
+ * Trek Adapter - Load Trek event content into recyclerview
+ */
 public class TrekAdapter extends RecyclerView.Adapter<TrekAdapter.SiteViewHolder>{
 
     private List<Trek> candidates;
@@ -136,6 +137,9 @@ public class TrekAdapter extends RecyclerView.Adapter<TrekAdapter.SiteViewHolder
         }
     }
 
+    /**
+     * Telegram Bot AsycTasc - Send data to the @magellan_jcie_bot
+     */
     private class AsyncTaskRunner extends AsyncTask<String, String, String> {
 
         private String resp;

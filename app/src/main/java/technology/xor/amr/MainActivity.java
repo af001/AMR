@@ -45,11 +45,13 @@ import technology.xor.amr.MapViews.MapView;
 import technology.xor.amr.trek.Trek;
 import technology.xor.amr.trek.TrekAdapter;
 
+/**
+ * MainActivity - Main controller for recyclerview
+ */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1000;
-    private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
     private List<Site> sites;
     private List<Trek> candidates;
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         viewGroup = (ViewGroup) ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
 
+        // Set up the UI
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -88,8 +91,10 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Verify permissions
         RequestPermissionLocation();
 
+        // Load the correct tab and view on start / resume
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         tab = sharedPreferences.getString("state", "INTEGRITY");
@@ -103,18 +108,9 @@ public class MainActivity extends AppCompatActivity
             SetSelectedTab(tab,navigationView);
         }
 
+        // Get data for the recyclerview
         AsyncTaskRunner runner = new AsyncTaskRunner();
         runner.execute("Running");
-    }
-
-    public void onResume() {
-        super.onResume();
-        // sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    }
-
-    public void onPause() {
-        super.onResume();
-        // sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     private void RequestPermissionLocation() {
