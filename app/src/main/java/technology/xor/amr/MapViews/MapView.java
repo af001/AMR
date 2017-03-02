@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import technology.xor.amr.PermissionUtils;
 import technology.xor.amr.R;
 
 public class MapView extends FragmentActivity implements OnMapReadyCallback {
@@ -51,7 +53,6 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
         mMap = googleMap;
         mMap.getUiSettings();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Do Nothing
             return;
         }
         UiSettings uiSettings = mMap.getUiSettings();

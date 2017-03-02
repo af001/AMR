@@ -51,9 +51,10 @@ public class SiteAdapter extends RecyclerView.Adapter<SiteAdapter.SiteViewHolder
     }
 
     @Override
-    public void onBindViewHolder(SiteViewHolder holder, int position) {
+    public void onBindViewHolder(final SiteViewHolder holder, int position) {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        final SharedPreferences.Editor prefEditor = sharedPreferences.edit();
         final String teamName = sharedPreferences.getString("team_name", "INTEGRITY");
 
         holder.siteName.setText(sites.get(position).name);
@@ -64,12 +65,18 @@ public class SiteAdapter extends RecyclerView.Adapter<SiteAdapter.SiteViewHolder
         final String arriveMsg = "arrived";
         final String departMsg = "departed";
 
+        CheckStatus(name, holder.btnArrive, holder.btnDepart);
+
         holder.btnArrive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 AsyncTaskRunner runner = new AsyncTaskRunner();
                 runner.execute(teamName, arriveMsg, name);
+                prefEditor.putInt(name, 1);
+                prefEditor.apply();
+                holder.btnArrive.setEnabled(false);
+                holder.btnDepart.setEnabled(true);
             }
         });
 
@@ -87,6 +94,10 @@ public class SiteAdapter extends RecyclerView.Adapter<SiteAdapter.SiteViewHolder
             public void onClick(View view) {
                 AsyncTaskRunner runner = new AsyncTaskRunner();
                 runner.execute(teamName, departMsg, name);
+                prefEditor.putInt(name, 2);
+                prefEditor.apply();
+                holder.btnArrive.setEnabled(false);
+                holder.btnDepart.setEnabled(false);
             }
         });
     }
@@ -119,6 +130,25 @@ public class SiteAdapter extends RecyclerView.Adapter<SiteAdapter.SiteViewHolder
             btnArrive = (Button) itemView.findViewById(R.id.btn_arrive);
             btnDepart = (Button) itemView.findViewById(R.id.btn_depart);
             btnDetails = (Button) itemView.findViewById(R.id.btn_details);
+        }
+    }
+
+    private void CheckStatus(String name, Button arrive, Button depart) {
+        final int activityLevel = sharedPreferences.getInt(name, 0);
+
+        switch (activityLevel) {
+            case 0:
+                depart.setEnabled(false);
+                arrive.setEnabled(true);
+                break;
+            case 1:
+                depart.setEnabled(true);
+                arrive.setEnabled(false);
+                break;
+            case 2:
+                depart.setEnabled(false);
+                arrive.setEnabled(false);
+                break;
         }
     }
 

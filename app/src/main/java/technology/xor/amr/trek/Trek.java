@@ -6,4 +6,8 @@ public class Trek {
     public Trek(String candidate) {
         this.candidate = candidate;
     }
+
+    public String getName() {
+        return candidate;
+    }
 }

@@ -195,7 +195,8 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void InitializeCitrineDetour() {
-        details.add(new Details("Question: What members signed from the state that is famous for the “Boston Tea Party?", "Answer: Robert Treat Paine, John Hancock, Samuel Adams, John Adams, and Elbridge Gerry"));
+        details = new ArrayList<>();
+        details.add(new Details("Question: What members signed from the state that is famous for the Boston Tea Party?", "Answer: Robert Treat Paine, John Hancock, Samuel Adams, John Adams, and Elbridge Gerry"));
         details.add(new Details("Task: Take a group photo in front of Massachusetts.", "Answer: None"));
         details.add(new Details("Task: Continue with your original plan.", "Answer: None"));
     }

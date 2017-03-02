@@ -3,11 +3,13 @@ package technology.xor.amr.trek;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.MultiSelectListPreference;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,9 +51,11 @@ public class TrekAdapter extends RecyclerView.Adapter<TrekAdapter.SiteViewHolder
     }
 
     @Override
-    public void onBindViewHolder(SiteViewHolder holder, int position) {
+    public void onBindViewHolder(final SiteViewHolder holder, final int position) {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+
+        final SharedPreferences.Editor prefEditor = sharedPreferences.edit();
         final String siteName = sharedPreferences.getString("site_name", "RV1");
 
         holder.candidateNumber.setText(candidates.get(position).candidate);
@@ -60,12 +64,17 @@ public class TrekAdapter extends RecyclerView.Adapter<TrekAdapter.SiteViewHolder
         final String arriveMsg = "arrived";
         final String departMsg = "departed";
 
+        CheckStatus(name, holder.btnArrive, holder.btnDepart);
+
         holder.btnArrive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 AsyncTaskRunner runner = new AsyncTaskRunner();
                 runner.execute(name, arriveMsg, siteName);
+                prefEditor.putInt(name, 1);
+                prefEditor.apply();
+                holder.btnArrive.setEnabled(false);
+                holder.btnDepart.setEnabled(true);
             }
         });
 
@@ -74,8 +83,32 @@ public class TrekAdapter extends RecyclerView.Adapter<TrekAdapter.SiteViewHolder
             public void onClick(View view) {
                 AsyncTaskRunner runner = new AsyncTaskRunner();
                 runner.execute(name, departMsg, siteName);
+                prefEditor.putInt(name, 2);
+                prefEditor.apply();
+                holder.btnArrive.setEnabled(false);
+                holder.btnDepart.setEnabled(false);
             }
         });
+
+    }
+
+    private void CheckStatus(String name, Button arrive, Button depart) {
+        final int activityLevel = sharedPreferences.getInt(name, 0);
+
+        switch (activityLevel) {
+            case 0:
+                depart.setEnabled(false);
+                arrive.setEnabled(true);
+                break;
+            case 1:
+                depart.setEnabled(true);
+                arrive.setEnabled(false);
+                break;
+            case 2:
+                depart.setEnabled(false);
+                arrive.setEnabled(false);
+                break;
+        }
     }
 
     @Override

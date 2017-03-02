@@ -10,6 +10,10 @@ public class Site {
         this.description = description;
         this.photoId = photoId;
     }
+
+    public String getName() {
+        return name;
+    }
 }
 
 

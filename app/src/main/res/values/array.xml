@@ -14,4 +14,24 @@
         <item>RV5</item>
         <item>RV6</item>
     </string-array>
+    <string-array name="pref_candidates" >
+        <item>V011</item>
+        <item>V012</item>
+        <item>V013</item>
+        <item>V014</item>
+        <item>V015</item>
+        <item>V016</item>
+        <item>X121</item>
+        <item>X122</item>
+        <item>X123</item>
+        <item>X124</item>
+        <item>X125</item>
+        <item>X126</item>
+        <item>Y231</item>
+        <item>X232</item>
+        <item>X233</item>
+        <item>X234</item>
+        <item>X235</item>
+        <item>X236</item>
+    </string-array>
 </resources>

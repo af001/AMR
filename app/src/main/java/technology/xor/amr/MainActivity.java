@@ -1,6 +1,7 @@
 package technology.xor.amr;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.NavigationView;
@@ -18,7 +20,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,16 +37,19 @@ import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import io.fabric.sdk.android.Fabric;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import technology.xor.amr.MapViews.MapView;
 import technology.xor.amr.trek.Trek;
 import technology.xor.amr.trek.TrekAdapter;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1000;
+    private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
     private List<Site> sites;
     private List<Trek> candidates;
@@ -56,6 +60,8 @@ public class MainActivity extends AppCompatActivity
     private FrameLayout progressBarHolder;
     private AlphaAnimation inAnimation;
     private AlphaAnimation outAnimation;
+    private Toolbar toolbar;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +70,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         viewGroup = (ViewGroup) ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
@@ -79,14 +85,14 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         RequestPermissionLocation();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         tab = sharedPreferences.getString("state", "INTEGRITY");
-        System.out.println(tab);
 
         if (tab.equals("MAP")) {
             String teamName = sharedPreferences.getString("team_name", "INTEGRITY");
@@ -99,6 +105,16 @@ public class MainActivity extends AppCompatActivity
 
         AsyncTaskRunner runner = new AsyncTaskRunner();
         runner.execute("Running");
+    }
+
+    public void onResume() {
+        super.onResume();
+        // sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    public void onPause() {
+        super.onResume();
+        // sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     private void RequestPermissionLocation() {
@@ -117,6 +133,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void SetSelectedTab(String ix, NavigationView nv) {
+
         switch (ix) {
             case "INTEGRITY":
                 nv.setCheckedItem(R.id.nav_integrity);
@@ -129,6 +146,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case "COURAGE":
                 nv.setCheckedItem(R.id.nav_courage);
+                break;
+            case "URBAN TREK":
+                nv.setCheckedItem(R.id.nav_trek);
                 break;
         }
     }
@@ -159,30 +179,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent prefActivity = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(prefActivity);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -201,11 +197,51 @@ public class MainActivity extends AppCompatActivity
             SetView("MAP");
         } else if (id == R.id.nav_trek){
             SetView("URBAN TREK");
+        } else if (id == R.id.nav_settings) {
+            Intent prefActivity = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(prefActivity);
+        } else if (id == R.id.nav_reset) {
+            AlertUser();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void AlertUser() {
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        alertDialogBuilder.setMessage("This action will reset the app to its default configuration. Continue?");
+                alertDialogBuilder.setPositiveButton("Do It!",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+
+                                if (candidates != null) {
+                                    for (Trek trek : candidates) {
+                                        editor.putInt(trek.getName(), 0);
+                                        editor.apply();
+                                    }
+                                }
+                                if (sites != null) {
+                                    for (Site site : sites) {
+                                        editor.putInt(site.getName(), 0);
+                                        editor.apply();
+                                    }
+                                    tab = sharedPreferences.getString("state", "INTEGRITY");
+                                    SetView(tab);
+                                    SetSelectedTab(tab,navigationView);
+                                }
+                            }
+                        });
+
+        alertDialogBuilder.setNegativeButton("Cancel",null);
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     private void SetView(String state) {
@@ -218,24 +254,28 @@ public class MainActivity extends AppCompatActivity
                 InitializeAdapter();
                 prefEditor.putString("state", state);
                 prefEditor.apply();
+                getSupportActionBar().setTitle("Integrity");
                 break;
             case "LOYALTY":
                 InitializeLoyalty();
                 InitializeAdapter();
                 prefEditor.putString("state", state);
                 prefEditor.apply();
+                getSupportActionBar().setTitle("Loyalty");
                 break;
             case "HONOR":
                 InitializeHonor();
                 InitializeAdapter();
                 prefEditor.putString("state", state);
                 prefEditor.apply();
+                getSupportActionBar().setTitle("Honor");
                 break;
             case "COURAGE":
                 InitializeCourage();
                 InitializeAdapter();
                 prefEditor.putString("state", state);
                 prefEditor.apply();
+                getSupportActionBar().setTitle("Courage");
                 break;
             case "MAP":
                 prefEditor.putString("state", state);
@@ -248,30 +288,22 @@ public class MainActivity extends AppCompatActivity
                 prefEditor.apply();
                 InitializeTrek();
                 InitializeTrekAdapter();
+                getSupportActionBar().setTitle("Urban Trek");
                 break;
         }
     }
 
     private void InitializeTrek() {
+        Set<String> selections = sharedPreferences.getStringSet("active_candidates", null);
+        assert selections != null;
+        String[] selected = selections.toArray(new String[] {});
+        Arrays.sort(selected);
+
         candidates = new ArrayList<>();
-        candidates.add(new Trek("V121"));
-        candidates.add(new Trek("V122"));
-        candidates.add(new Trek("V123"));
-        candidates.add(new Trek("V124"));
-        candidates.add(new Trek("V125"));
-        candidates.add(new Trek("V126"));
-        candidates.add(new Trek("X121"));
-        candidates.add(new Trek("X122"));
-        candidates.add(new Trek("X123"));
-        candidates.add(new Trek("X124"));
-        candidates.add(new Trek("X125"));
-        candidates.add(new Trek("X126"));
-        candidates.add(new Trek("Y121"));
-        candidates.add(new Trek("Y122"));
-        candidates.add(new Trek("Y123"));
-        candidates.add(new Trek("Y124"));
-        candidates.add(new Trek("Y125"));
-        candidates.add(new Trek("Y126"));
+
+        for (String select : selected) {
+            candidates.add(new Trek(select));
+        }
     }
 
     private void InitializeIntegrity(){
@@ -351,6 +383,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        System.out.println("Key: " +  key);
+        if (key.equals("active_candidates")) {
+            if (tab.equals("URBAN TREK")) {
+                InitializeTrek();
+                InitializeTrekAdapter();
+                SetSelectedTab("URBAN TREK", navigationView);
+            }
+        }
     }
 
     private class AsyncTaskRunner extends AsyncTask<String, String, String> {

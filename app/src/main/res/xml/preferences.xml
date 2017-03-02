@@ -21,5 +21,11 @@
             android:entries="@array/pref_site_entry"
             android:entryValues="@array/pref_site_entry"
             android:defaultValue="RV1" />
+        <MultiSelectListPreference
+            android:key="active_candidates"
+            android:title="Active Candidates"
+            android:summary="Set the candidate roster numbers that are attending this selection"
+            android:entries="@array/pref_candidates"
+            android:entryValues="@array/pref_candidates" />
     </PreferenceCategory>
 </PreferenceScreen>
