@@ -9,7 +9,7 @@
             android:dialogTitle="Select your team from the list:"
             android:entries="@array/pref_interval_entry"
             android:entryValues="@array/pref_interval_entry"
-            android:defaultValue="Integrity" />
+            android:defaultValue="@string/default_value" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="Urban Trek Settings">
@@ -20,12 +20,13 @@
             android:dialogTitle="Select your site from the list:"
             android:entries="@array/pref_site_entry"
             android:entryValues="@array/pref_site_entry"
-            android:defaultValue="RV1" />
+            android:defaultValue="@string/default_trek" />
         <MultiSelectListPreference
             android:key="active_candidates"
             android:title="Active Candidates"
             android:summary="Set the candidate roster numbers that are attending this selection"
             android:entries="@array/pref_candidates"
-            android:entryValues="@array/pref_candidates" />
+            android:entryValues="@array/pref_candidates"/>
+
     </PreferenceCategory>
 </PreferenceScreen>

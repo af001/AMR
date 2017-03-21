@@ -291,14 +291,16 @@ public class MainActivity extends AppCompatActivity
 
     private void InitializeTrek() {
         Set<String> selections = sharedPreferences.getStringSet("active_candidates", null);
-        assert selections != null;
-        String[] selected = selections.toArray(new String[] {});
-        Arrays.sort(selected);
 
         candidates = new ArrayList<>();
 
-        for (String select : selected) {
-            candidates.add(new Trek(select));
+        if (selections != null) {
+            String[] selected = selections.toArray(new String[] {});
+            Arrays.sort(selected);
+
+            for (String select : selected) {
+                candidates.add(new Trek(select));
+            }
         }
     }
 
